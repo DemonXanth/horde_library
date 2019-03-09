@@ -1,7 +1,7 @@
 from flask import render_template, request
 import isbnlib
 from app import app
-from all import search_like, getCoverSmall
+from all import search_like
 
 
 @app.route('/')
