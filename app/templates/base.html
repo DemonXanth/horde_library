@@ -1,0 +1,37 @@
+<html>
+
+<head>
+	<style>
+		table {
+			border: 1px solid black;
+			border-collapse: collapse;
+			width: 50%;
+			float: left;
+			min-height: 370px;
+		}
+
+		th,
+		td {
+			padding: 5px;
+		}
+
+		nav {}
+	</style>
+	{% if title %}
+	<title>{{title}} - library</title>
+	{% else %}
+	<title>Welcome to the library catalog</title>
+	{% endif %}
+</head>
+
+<body>
+	<nav>
+		Horde Library: <a href="{{ url_for('index') }}">Home</a>
+		<a href="{{ url_for('search') }}">Search</a>
+		<hr>
+	</nav>
+
+	{% block content %}{% endblock %}
+</body>
+
+</html>
