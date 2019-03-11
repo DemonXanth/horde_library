@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+<br>
+<form action="{{ url_for('add') }}" method="POST">
+    <fieldset style="border-radius: 5px">
+        <legend>ISBN to Add:</legend>
+        <input type="text" name="stupid" id="stupid">
+        <input type="button" id="btn" value="|||">
+        <br>
+        <input type="submit" value="Add">
+    </fieldset>
+</form>
+
+<div class="scanner" id="scanner-container"></div>
+
+<script src="https://cdn.rawgit.com/serratus/quaggaJS/0420d5e0/dist/quagga.min.js"></script>
+
+<script src="{{ url_for('static', filename='barcode.js') }}"></script>
+{% if results %}
+{{ table(results) }}
+{% endif %}
+{% endblock %}

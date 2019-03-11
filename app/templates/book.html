@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% for row in results %}
+<div class="book">
+    <h1>{{ row.Title }}</h1>
+    <img class="cover" src="{{ row.Pic }}" alt="{{ row.Title }}">
+    <p><b>Description: </b><br>{{ row.Desc }}</p>
+    <p><b>ID: </b>{{ row.ID }}</p>
+    <p><b>Author(s): </b>{{ row.Author }}</p>
+    <p><b>ISBN: </b>{{ row.ISBN }}</p>
+    <p><b>Published In: </b>{{ row.Year }}</p>
+    <p><b>Published By: </b>{{ row.Publisher }}</p>
+    <p><b>Added: </b>{{ row.Added }}</p>
+
+    <form action="{{ url_for('book', book_id=row.ID) }}" method="POST">
+        <select name="action">
+            <option value="Delete" selected> Delete</option>
+            <option value="Copy"> Copy</option>
+        </select>
+        <input type="submit" value="Submit">
+    </form>
+</div>
+{% endfor %}
+{% endblock %}

@@ -1,36 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-{% if results %}{% for row in results %}
-<table>
-
-    <tr>
-        <th colspan="2">{{ row.Title }}</th>
-    </tr>
-    <tr>
-        <th colspan="2"><img src="{{ row.SmallPic }}" alt="{{ row.Title }}" style="height: 167; width: 128"> </th>
-    </tr>
-    <tr>
-        <th>ID</th>
-        <td>{{ row.ID }}</td>
-    </tr>
-    <tr>
-        <th>Author(s)</th>
-        <td>{{ row.Author }}</td>
-    </tr>
-    <tr>
-        <th>ISBN</th>
-        <td>{{ row.ISBN }}</td>
-    </tr>
-    <tr>
-        <th>Year</th>
-        <td>{{ row.Year }}</td>
-    </tr>
-    <tr>
-        <th>Publisher</th>
-        <td>{{ row.Publisher }}</td>
-    </tr>
-
-</table>{% endfor %}
+{% if results %}
+{{ table(results) }}
 {% endif %}
 {% endblock %}

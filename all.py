@@ -17,20 +17,39 @@ def initDB(cursor):
         Added TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         ID INTEGER PRIMARY KEY AUTOINCREMENT,
         SmallPic TEXT,
-        Pic TEXT
+        Pic TEXT, 
+        Desc TEXT
         )""")
 
 
-def add(cursor, isbn):
+def search_add(isbn):
+    db = sqlite3.connect('test.db')
+    db.row_factory = sqlite3.Row
+    cursor = db.cursor()
+
     if isbnlib.is_isbn13(isbn):
         info = isbnlib.meta(isbn)
         au = ", ".join(info['Authors'])
         addBook(cursor, info['ISBN-13'], info['Title'],
-                au, info['Year'], info['Publisher'], getCoverSmall(isbn), getCover(isbn))
+                au, info['Year'], info['Publisher'], getCoverSmall(isbn), getCover(isbn), getDesc(isbn))
 
-        printRows(search_equals(cursor, 'ISBN', isbn))
+        db.commit()
+        return search_equals(cursor, 'ISBN', isbn)
+    elif isbnlib.is_isbn10(isbn):
+        isbn = isbnlib.to_isbn13(isbn)
+        info = isbnlib.meta(isbn)
+        au = ", ".join(info['Authors'])
+        addBook(cursor, info['ISBN-13'], info['Title'],
+                au, info['Year'], info['Publisher'], getCoverSmall(isbn), getCover(isbn), getDesc(isbn))
+
+        db.commit()
+        return search_equals(cursor, 'ISBN', isbn)
     else:
         print("Not a valid ISBN")
+        return None
+
+    db.commit()
+    db.close()
 
 
 def readAll(cursor):
@@ -73,14 +92,20 @@ def printRows(rows):
         printRow(row)
 
 
-def delete(cursor, id):
+def delete(id):
+    db = sqlite3.connect('test.db')
+    db.row_factory = sqlite3.Row
+    cursor = db.cursor()
+
     cursor.execute("DELETE FROM all_books WHERE ID = (?)", (id, ))
     print("Book with ID " + id + " is deleted")
+    db.commit()
+    db.close()
 
 
-def addBook(cursor, isbn, title, author, year, publisher, smallPic, pic):
-    cursor.execute("INSERT INTO all_books(ISBN, Title, Author, Year, Publisher, SmallPic, Pic) values((?), (?), (?), (?), (?), (?), (?))",
-                   (isbn, title, author, year, publisher, smallPic, pic))
+def addBook(cursor, isbn, title, author, year, publisher, smallPic, pic, desc):
+    cursor.execute("INSERT INTO all_books(ISBN, Title, Author, Year, Publisher, SmallPic, Pic, Desc) values((?), (?), (?), (?), (?), (?), (?), (?))",
+                   (isbn, title, author, year, publisher, smallPic, pic, desc))
 
 
 def getCoverSmall(isbn):
@@ -93,3 +118,8 @@ def getCover(isbn):
     cover = isbnlib.cover(isbn)
     if cover != None:
         return cover['thumbnail']
+
+
+def getDesc(isbn):
+    desc = isbnlib.desc(isbn)
+    return desc

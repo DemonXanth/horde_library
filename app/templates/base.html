@@ -1,37 +1,91 @@
 <html>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+{% macro table(results) %}
+{% for row in results %}
+<a href="{{ url_for('book', book_id=row.ID ) }}">
+	<table class="{{ loop.cycle('left', 'right') }}">
+
+		<tr>
+			<th colspan="2">{{ row.Title }}</th>
+		</tr>
+		<tr>
+			<th colspan="2"><img class="smallCover" src="{{ row.SmallPic }}" alt="{{ row.Title }}"> </th>
+		</tr>
+		<tr>
+			<th>ID</th>
+			<td>{{ row.ID }}</td>
+		</tr>
+		<tr>
+			<th>Author(s)</th>
+			<td>{{ row.Author }}</td>
+		</tr>
+		<tr>
+			<th>ISBN</th>
+			<td>{{ row.ISBN }}</td>
+		</tr>
+		<tr>
+			<th>Year</th>
+			<td>{{ row.Year }}</td>
+		</tr>
+		<tr>
+			<th>Publisher</th>
+			<td>{{ row.Publisher }}</td>
+		</tr>
+	</table>
+</a>
+{% endfor %}
+{% endmacro %}
 
 <head>
-	<style>
-		table {
-			border: 1px solid black;
-			border-collapse: collapse;
-			width: 50%;
-			float: left;
-			min-height: 370px;
-		}
+	<link rel="stylesheet" href="/static/stylesheet.css">
 
-		th,
-		td {
-			padding: 5px;
-		}
-
-		nav {}
-	</style>
 	{% if title %}
-	<title>{{title}} - library</title>
+	<title>{{title}} - Horde Library</title>
 	{% else %}
 	<title>Welcome to the library catalog</title>
 	{% endif %}
 </head>
 
 <body>
-	<nav>
-		Horde Library: <a href="{{ url_for('index') }}">Home</a>
-		<a href="{{ url_for('search') }}">Search</a>
-		<hr>
-	</nav>
+	<div class="top">
+		<div class="header">
+			<h1>Horde Library</h1>
+		</div>
 
-	{% block content %}{% endblock %}
+		<nav>
+			<a href="{{ url_for('index') }}">Home </a>
+			<a href="{{ url_for('add') }}">Add Books </a>
+
+			<form class="search" action="{{ url_for('search') }}" method="POST">
+				<select name="key">
+					<option value="Title" selected> Title</option>
+					<option value="ISBN"> ISBN</option>
+					<option value="ID"> ID</option>
+					<option value="Author"> Author</option>
+					<option value="Publisher"> Publisher</option>
+					<option value="Year"> Year</option>
+				</select>
+				<input type="text" name="data">
+				<input type="submit" value="Search">
+			</form>
+		</nav>
+	</div>
+
+	<div class="content">
+		{% with messages = get_flashed_messages() %}
+		{% if messages %}
+		<ul class="flashes">
+			{% for message in messages %}
+			<li>{{ message }}</li>
+			{% endfor %}
+		</ul>
+		{% endif %}
+		{% endwith %}
+
+		{% block content %}{% endblock %}
+	</div>
+
 </body>
 
 </html>

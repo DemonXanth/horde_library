@@ -20,7 +20,7 @@ while(True):
 
     elif c1 == 'add' or c1 == 'a':
         isbn = input('ISBN of the book you would like to add: ')
-        add(cursor, isbn)
+        add(isbn)
 
     elif c1 == 'delete' or c1 == 'd':
         id = input('ID of book you would like to delete: ')
